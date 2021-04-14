@@ -1,9 +1,11 @@
 package org.learn.aws.orderdata.persistence;
 
-import org.learn.aws.orderdata.dataObjects.Order;
+import org.learn.aws.orderdata.persistence.entities.OrderEntity;
 
 public interface PersistenceRepository {
 
-    Order searchOrder(String orderNumber);
+    OrderEntity findOrderByOrderNumber(String orderNumber);
+
+    void addOrder(OrderEntity orderEntity);
 
 }

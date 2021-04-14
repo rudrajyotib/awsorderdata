@@ -3,13 +3,14 @@ package org.learn.aws.orderdata.service;
 import org.junit.jupiter.api.Test;
 import org.learn.aws.orderdata.dataObjects.Order;
 import org.learn.aws.orderdata.persistence.PersistenceRepository;
+import org.learn.aws.orderdata.persistence.entities.OrderEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ContextConfiguration;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 
@@ -24,15 +25,24 @@ class OrderServiceImplWithFixedValuePersistenceTest {
     private OrderService orderService;
 
     @Test
-    public void shouldReturnFixedValueOrder() {
+    public void shouldReturnAnOrder() {
         //OrderService fixedValueOrderService = new OrderServiceImpl();
-        when(persistenceRepository.searchOrder(eq("XYZ"))).
-                thenReturn(new Order("XYZ", "AWS"));
+        when(persistenceRepository.findOrderByOrderNumber(eq("XYZ"))).
+                thenReturn(new OrderEntity());
 
         Order order = orderService.searchOrder("XYZ");
         assertNotNull(order);
-        assertEquals(order.getOrderNumber(), "XYZ");
-        assertEquals(order.getProduct(), "AWS");
     }
+
+    @Test
+    public void shouldHandleOrderNotFoundInRepository() {
+        //OrderService fixedValueOrderService = new OrderServiceImpl();
+        when(persistenceRepository.findOrderByOrderNumber(eq("XYZ"))).
+                thenReturn(null);
+
+        Order order = orderService.searchOrder("XYZ");
+        assertNull(order);
+    }
+
 
 }
