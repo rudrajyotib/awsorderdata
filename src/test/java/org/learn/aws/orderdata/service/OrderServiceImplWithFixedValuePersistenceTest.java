@@ -9,9 +9,10 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ContextConfiguration;
 
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest
@@ -44,5 +45,16 @@ class OrderServiceImplWithFixedValuePersistenceTest {
         assertNull(order);
     }
 
+    @Test
+    public void shouldAddOrder() {
+        doNothing().when(persistenceRepository).addOrder(argThat(orderEntity -> {
+            assertNotNull(orderEntity);
+            assertEquals("AA", orderEntity.getOrderNumber());
+            assertEquals("AA", orderEntity.getProduct());
+            return true;
+        }));
+
+        orderService.addOrder(new Order("AA", "AA"));
+    }
 
 }
