@@ -6,6 +6,6 @@ public interface OrderService {
 
     Order searchOrder(String orderNumber);
 
-    void addOrder(Order order);
+    int addOrder(Order order);
 
 }

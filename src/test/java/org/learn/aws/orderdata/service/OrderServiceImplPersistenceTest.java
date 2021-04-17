@@ -17,7 +17,7 @@ import static org.mockito.Mockito.when;
 
 @SpringBootTest
 @ContextConfiguration(classes = OrderServiceImpl.class)
-class OrderServiceImplWithFixedValuePersistenceTest {
+class OrderServiceImplPersistenceTest {
 
     @MockBean
     private PersistenceRepository persistenceRepository;
@@ -54,7 +54,9 @@ class OrderServiceImplWithFixedValuePersistenceTest {
             return true;
         }));
 
-        orderService.addOrder(new Order("AA", "AA"));
+        int result = orderService.addOrder(new Order("AA", "AA"));
+
+        assertEquals(0, result);
     }
 
 }

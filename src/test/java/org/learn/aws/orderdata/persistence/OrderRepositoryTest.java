@@ -1,5 +1,6 @@
 package org.learn.aws.orderdata.persistence;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
@@ -8,12 +9,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.AutoConfigurationPackage;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.transaction.TransactionDefinition;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.support.TransactionCallback;
 import org.springframework.transaction.support.TransactionCallbackWithoutResult;
 import org.springframework.transaction.support.TransactionTemplate;
 
@@ -55,6 +58,16 @@ class OrderRepositoryTest {
         OrderEntity order = transactionTemplate.execute(transactionStatus -> orderRepository.findOrderByOrderNumber("A111"));
         assertNotNull(order);
         assertEquals("AWS", order.getProduct());
+    }
+
+    @Test()
+    public void shouldThrowExceptionOnDuplicateInsertion() {
+        Assertions.assertThrows(DataIntegrityViolationException.class,
+                () -> transactionTemplate
+                        .execute((TransactionCallback<Void>) transactionStatus -> {
+                            orderRepository.addOrder(new OrderEntity("A111", "AWS"));
+                            return null;
+                        }));
     }
 
 

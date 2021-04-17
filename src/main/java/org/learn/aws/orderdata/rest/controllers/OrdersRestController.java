@@ -7,9 +7,20 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @RestController
 @RequestMapping("/rest")
 public class OrdersRestController {
+
+    private static final Map<Integer, HttpStatus> resultCodeToResponseCodeMapping = new HashMap<>(3) {
+        {
+            put(0, HttpStatus.OK);
+            put(1, HttpStatus.CONFLICT);
+            put(2, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    };
 
     @Autowired
     private OrderService orderService;
@@ -20,8 +31,9 @@ public class OrdersRestController {
     }
 
     @PostMapping("/orders/add")
-    public void addOrder(@RequestBody Order order) {
-        orderService.addOrder(order);
+    public ResponseEntity<String> addOrder(@RequestBody Order order) {
+        int result = orderService.addOrder(order);
+        return new ResponseEntity<>(Integer.toString(result), resultCodeToResponseCodeMapping.get(result));
     }
 
 }

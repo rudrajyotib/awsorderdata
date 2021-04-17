@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Search</title>
+    <link media="all" rel="stylesheet" th:href="@{/css/orders.css}" type="text/css">
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- jQuery library -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+    <!-- Popper JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+
+    <!-- Latest compiled JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</head>
+<body>
+<div class="container pt-3 border">
+    <h1>Create your orders</h1>
+    <hr>
+    <form action="#" id="orderEntryForm" name="orderEntryForm" th:action="@{/createorder}" th:method="POST"
+          th:object="${orderData}">
+        <div class="row">
+            <div class="form-group col-sm-6">
+                <label for="orderNumber" th:classappend="${#fields.hasErrors('orderNumber') ? 'error' : ''} ">Order
+                    Number</label>
+                <input class="form-control" id="orderNumber" name="orderNumber" th:field="*{orderNumber}" type="text">
+                <div class="text-danger" th:errors="*{orderNumber}" th:if="${#fields.hasErrors('orderNumber')}"></div>
+            </div>
+            <div class="form-group col-sm-6">
+                <label for="orderNumber"
+                       th:classappend="${#fields.hasErrors('product') ? 'error' : ''} ">Product</label>
+                <input class="form-control" id="product" name="product" th:field="*{product}" type="text">
+            </div>
+        </div>
+        <input class="btn btn-primary" id="createOrderButton" type="submit" value="Create Order">
+    </form>
+</div>
+</body>
+</html>
