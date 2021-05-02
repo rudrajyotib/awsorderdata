@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
+import org.learn.aws.orderdata.persistence.entities.AuditEntity;
 import org.learn.aws.orderdata.persistence.entities.OrderEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.AutoConfigurationPackage;
@@ -19,6 +20,8 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.support.TransactionCallback;
 import org.springframework.transaction.support.TransactionCallbackWithoutResult;
 import org.springframework.transaction.support.TransactionTemplate;
+
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -42,10 +45,11 @@ class OrderRepositoryTest {
     public void setUp() {
         transactionTemplate.setPropagationBehavior(Propagation.REQUIRES_NEW.value());
         transactionTemplate.setIsolationLevel(TransactionDefinition.ISOLATION_SERIALIZABLE);
+        System.setProperty("system.host.name", "host1");
 
         transactionTemplate.execute(new TransactionCallbackWithoutResult() {
             @Override
-            protected void doInTransactionWithoutResult(TransactionStatus transactionStatus) {
+            protected void doInTransactionWithoutResult(@SuppressWarnings("NullableProblems") TransactionStatus transactionStatus) {
 
                 orderRepository.addOrder(new OrderEntity("A111", "AWS"));
 
@@ -56,8 +60,20 @@ class OrderRepositoryTest {
     @Test
     public void shouldRetrieveOrder() {
         OrderEntity order = transactionTemplate.execute(transactionStatus -> orderRepository.findOrderByOrderNumber("A111"));
+        List<AuditEntity> auditEvents = transactionTemplate.execute(transactionStatus -> orderRepository.listAllAuditEvents());
         assertNotNull(order);
         assertEquals("AWS", order.getProduct());
+        assertNotNull(auditEvents);
+        assertEquals(1, auditEvents.size());
+        List<AuditEntity> queriedAuditEvents = transactionTemplate.execute(transactionStatus -> orderRepository.getAuditEntriesByEntity("A111"));
+        assert queriedAuditEvents != null;
+        assertEquals(1, queriedAuditEvents.size());
+        AuditEntity auditEntity = queriedAuditEvents.get(0);
+        assertEquals("A111", auditEntity.getEntityId());
+        assertEquals("ORDER", auditEntity.getEntityType());
+        assertEquals("CREATE", auditEntity.getEvent());
+        assertEquals("host1", auditEntity.getHostName());
+        assertNotNull(auditEntity.getCreateDate());
     }
 
     @Test()

@@ -1,5 +1,6 @@
 package org.learn.aws.orderdata.persistence;
 
+import org.learn.aws.orderdata.persistence.entities.AuditEntity;
 import org.learn.aws.orderdata.persistence.entities.OrderEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -8,6 +9,8 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
+import javax.persistence.TypedQuery;
+import java.util.List;
 
 @Repository
 @Transactional(isolation = Isolation.SERIALIZABLE, propagation = Propagation.REQUIRED)
@@ -24,7 +27,19 @@ public class OrderRepository implements PersistenceRepository {
     @Override
     public void addOrder(OrderEntity orderEntity) {
         entityManager.persist(orderEntity);
+        entityManager.persist(new AuditEntity("ORDER", orderEntity.getOrderNumber(), "CREATE"));
     }
 
+    @Override
+    public List<AuditEntity> listAllAuditEvents() {
+        TypedQuery<AuditEntity> listAllAudits = entityManager.createNamedQuery("listAllAudits", AuditEntity.class);
+        return listAllAudits.getResultList();
+    }
 
+    @Override
+    public List<AuditEntity> getAuditEntriesByEntity(String entityNumber) {
+        TypedQuery<AuditEntity> query = entityManager.createQuery("select a from AuditEntity a where entityId = :entityNumber", AuditEntity.class);
+        query.setParameter("entityNumber", entityNumber);
+        return query.getResultList();
+    }
 }
