@@ -1,1 +1,8 @@
 language: java
+jdk:
+  - openjdk11
+
+script: ./mvnw clean package
+
+notifications:
+  email: rudrajyoti.biswas@gmail.com
