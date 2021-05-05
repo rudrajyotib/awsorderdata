@@ -75,7 +75,6 @@
 			<version>3.12.0</version>
 		</dependency>
 
-
 	</dependencies>
 
 	<build>
@@ -116,6 +115,15 @@
 				</executions>
 			</plugin>
 
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-deploy-plugin</artifactId>
+				<version>3.0.0-M1</version>
+				<configuration>
+					<artifactId>order-data-executable</artifactId>
+					<uniqueVersion>true</uniqueVersion>
+				</configuration>
+			</plugin>
 		</plugins>
 
 		<testResources>
@@ -133,6 +141,25 @@
 			</resource>
 		</resources>
 
+		<extensions>
+			<extension>
+				<groupId>com.github.nodely</groupId>
+				<artifactId>maven-s3-wagon</artifactId>
+				<version>1.0.0</version>
+			</extension>
+		</extensions>
+
 	</build>
+
+	<distributionManagement>
+		<snapshotRepository>
+			<id>order-data-build</id>
+			<url>s3://order-data-build/snapshots</url>
+		</snapshotRepository>
+		<repository>
+			<id>order-data-build</id>
+			<url>s3://order-data-build/releases</url>
+		</repository>
+	</distributionManagement>
 
 </project>
