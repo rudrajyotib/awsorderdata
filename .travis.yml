@@ -2,7 +2,7 @@ language: java
 jdk:
   - openjdk11
 
-script: ./mvnw -DAWS_DEFAULT_REGION=$aws_region -Daws.secretKey=$aws_secret_key -Daws.accessKeyId=$aws_access_key -DskipTests clean deploy
+script: ./mvnw clean package
 
 notifications:
   email: rudrajyoti.biswas@gmail.com
