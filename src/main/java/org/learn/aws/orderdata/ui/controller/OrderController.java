@@ -27,6 +27,12 @@ public class OrderController {
         return "order-create";
     }
 
+    @GetMapping("/searchorder")
+    public String searchOrder(Model model) {
+        model.addAttribute("orderData", new OrderModel("", ""));
+        return "order-search";
+    }
+
     @PostMapping("/createorder")
     public ModelAndView acceptNewOrder(@Valid @ModelAttribute("orderData") OrderModel orderModel, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {

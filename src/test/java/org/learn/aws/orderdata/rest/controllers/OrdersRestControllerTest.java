@@ -40,6 +40,17 @@ class OrdersRestControllerTest {
     }
 
     @Test
+    public void shouldReturnNoContentWhenOrderNotFound() throws Exception {
+        when(mockOrderService.searchOrder(any()))
+                .thenReturn(null);
+
+        this.mockMvc
+                .perform(MockMvcRequestBuilders.get("/rest/orders/AAC"))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(MockMvcResultMatchers.status().is(HttpStatus.NO_CONTENT.value()));
+    }
+
+    @Test
     public void shouldSendHttpOkResponseWhenOrderPersisted() throws Exception {
         when(mockOrderService.addOrder(any(Order.class)))
                 .thenReturn(0);

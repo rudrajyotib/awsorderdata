@@ -27,7 +27,8 @@ public class OrdersRestController {
 
     @GetMapping("/orders/{orderId}")
     public ResponseEntity<Order> getOrder(@PathVariable(name = "orderId") String orderId) {
-        return new ResponseEntity<>(orderService.searchOrder(orderId), HttpStatus.OK);
+        Order order = orderService.searchOrder(orderId);
+        return new ResponseEntity<>(order, (order == null) ? HttpStatus.NO_CONTENT : HttpStatus.OK);
     }
 
     @PostMapping("/orders/add")

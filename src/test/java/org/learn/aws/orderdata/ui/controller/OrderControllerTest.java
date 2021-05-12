@@ -27,11 +27,17 @@ class OrderControllerTest {
     private MockMvc mockMvc;
 
     @Test
-
     public void shouldTakeUserToOrderCreatePage() throws Exception {
         this.mockMvc.perform(get("/createorder"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("order-create"));
+    }
+
+    @Test
+    public void shouldTakeUserToOrderSearchPage() throws Exception {
+        this.mockMvc.perform(get("/searchorder"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("order-search"));
     }
 
     @Test
