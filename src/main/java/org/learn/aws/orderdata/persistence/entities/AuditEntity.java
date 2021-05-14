@@ -36,11 +36,11 @@ public class AuditEntity {
     public AuditEntity() {
     }
 
-    public AuditEntity(String entityType, String entityId, String event) {
+    public AuditEntity(String entityType, String entityId, String event, String hostName) {
         this.entityType = entityType;
         this.entityId = entityId;
         this.event = event;
-        this.hostName = System.getProperty("system.host.name", "NotAvailable");
+        this.hostName = hostName;
     }
 
     public String getId() {

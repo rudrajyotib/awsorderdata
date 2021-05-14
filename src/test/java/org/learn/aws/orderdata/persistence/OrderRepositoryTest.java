@@ -45,7 +45,6 @@ class OrderRepositoryTest {
     public void setUp() {
         transactionTemplate.setPropagationBehavior(Propagation.REQUIRES_NEW.value());
         transactionTemplate.setIsolationLevel(TransactionDefinition.ISOLATION_SERIALIZABLE);
-        System.setProperty("system.host.name", "host1");
 
         transactionTemplate.execute(new TransactionCallbackWithoutResult() {
             @Override

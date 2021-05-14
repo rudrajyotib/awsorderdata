@@ -1,8 +1,10 @@
 package org.learn.aws.orderdata.persistence;
 
+import org.apache.commons.lang3.StringUtils;
 import org.learn.aws.orderdata.persistence.entities.AuditEntity;
 import org.learn.aws.orderdata.persistence.entities.OrderEntity;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
@@ -19,6 +21,9 @@ public class OrderRepository implements PersistenceRepository {
     @Autowired
     private EntityManager entityManager;
 
+    @Value("${system.host.name}")
+    private String systemHostName;
+
     @Override
     public OrderEntity findOrderByOrderNumber(String orderNumber) {
         return entityManager.find(OrderEntity.class, orderNumber);
@@ -27,7 +32,8 @@ public class OrderRepository implements PersistenceRepository {
     @Override
     public void addOrder(OrderEntity orderEntity) {
         entityManager.persist(orderEntity);
-        entityManager.persist(new AuditEntity("ORDER", orderEntity.getOrderNumber(), "CREATE"));
+        entityManager.persist(new AuditEntity("ORDER",
+                orderEntity.getOrderNumber(), "CREATE", StringUtils.isEmpty(systemHostName) ? "NOT AVAILABLE" : systemHostName));
     }
 
     @Override
