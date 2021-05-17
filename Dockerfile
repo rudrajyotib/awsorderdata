@@ -1,0 +1,6 @@
+FROM openjdk:11.0.11
+
+COPY target/orderdata-0.0.1-SNAPSHOT.jar .
+WORKDIR .
+EXPOSE 5001
+ENTRYPOINT exec java  -DDB_USER=$DB_USER -DDB_PASS=$DB_PASS -DJDBC_URL=jdbc:postgresql://$DB_HOST:$DB_PORT/$DB_NAME -DSYSTEM_HOST_NAME=$HOSTNAME -jar orderdata-0.0.1-SNAPSHOT.jar
