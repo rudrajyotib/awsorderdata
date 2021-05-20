@@ -154,11 +154,11 @@
 	<distributionManagement>
 		<snapshotRepository>
 			<id>order-data-build</id>
-			<url>s3://order-data-build/snapshots</url>
+			<url>s3://order-data-build-storage/snapshots</url>
 		</snapshotRepository>
 		<repository>
 			<id>order-data-build</id>
-			<url>s3://order-data-build/releases</url>
+			<url>s3://order-data-build-storage/releases</url>
 		</repository>
 	</distributionManagement>
 

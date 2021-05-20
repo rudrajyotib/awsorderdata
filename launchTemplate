@@ -1,0 +1,45 @@
+#!/bin/bash
+touch logfile
+echo `whoami` >> logfile
+su - ubuntu
+cd /home/ubuntu
+touch logfile
+echo 'inside ubuntu home dir' >> logfile
+echo `whoami` >> logfile
+sudo apt update
+echo 'package updated' >> logfile
+sudo apt install -y openjdk-11-jre-headless
+echo 'jre installed' >> logfile
+sudo apt  install -y awscli
+echo 'aws cli installed' >> logfile
+mkdir order-data
+aws s3api get-object --bucket order-data-build --key snapshots/org/learn/aws/orderdata/0.0.1-SNAPSHOT/orderdata-0.0.1-20210514.071929-18.jar order-data/order-data-executable.jar
+echo 'jar downloaed' >> logfile
+chmod 777 order-data/order-data-executable.jar
+
+
+touch startApp.sh
+
+echo '#!/bin/bash
+
+export DB_USER=YOUR_DB_USER
+export DB_PASS=YOUR_DB_PASS
+export DB_HOST=YOUR_DB_HOST
+export DB_PORT=YOUT_DB_PORT
+export DB_NAME=YOUR_DB_NAME
+export HOSTNAME=$HOSTNAME
+
+nohup java -jar -DDB_USER=$DB_USER -DDB_PASS=$DB_PASS -DJDBC_URL=jdbc:postgresql://$DB_HOST:$DB_PORT/$DB_NAME -DSYSTEM_HOST_NAME=$HOSTNAME order-data/order-data-executable.jar &
+echo $! > pid.file' >> startApp.sh
+
+chmod 777 startApp.sh
+
+echo 'DB_USER::'$DB_USER' DB_PASS::'$DB_PASS' DB_HOST::'$DB_HOST' DB_PORT::'$DB_PORT' DB_NAME::'$DB_NAME' HOSTNAME::'$HOSTNAME >> logfile
+
+
+echo '#!/bin/bash
+kill $(cat pid.file)' >> stopApp.sh
+
+chmod 777 stopApp.sh
+
+./startApp.sh
