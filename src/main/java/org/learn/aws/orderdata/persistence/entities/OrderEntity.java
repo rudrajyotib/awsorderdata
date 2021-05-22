@@ -35,4 +35,7 @@ public class OrderEntity {
     }
 
 
+    public void setProduct(String updatedProduct) {
+        this.product = updatedProduct;
+    }
 }
