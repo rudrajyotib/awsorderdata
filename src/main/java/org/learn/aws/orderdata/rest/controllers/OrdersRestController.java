@@ -37,4 +37,10 @@ public class OrdersRestController {
         return new ResponseEntity<>(Integer.toString(result), resultCodeToResponseCodeMapping.get(result));
     }
 
+    @PutMapping("/orders/add")
+    public ResponseEntity<String> updateOrder(@RequestBody Order order) {
+        int result = orderService.addOrder(order);
+        return new ResponseEntity<>(Integer.toString(result), resultCodeToResponseCodeMapping.get(result));
+    }
+
 }

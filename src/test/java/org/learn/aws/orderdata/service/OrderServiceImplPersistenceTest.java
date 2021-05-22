@@ -106,7 +106,7 @@ class OrderServiceImplPersistenceTest {
             return null;
         }).when(transactionTemplate).executeWithoutResult(isA(Consumer.class));
         int result = orderService.updateOrder(new Order("A111", "UpdatedOrder"));
-        assertEquals(1, result);
+        assertEquals(2, result);
 
         verify(persistenceRepository, times(1)).findOrderByOrderNumber("A111");
         ArgumentCaptor<OrderEntity> orderEntityArgumentCaptor = ArgumentCaptor.forClass(OrderEntity.class);

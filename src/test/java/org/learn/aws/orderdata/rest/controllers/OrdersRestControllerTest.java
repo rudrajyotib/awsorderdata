@@ -93,4 +93,33 @@ class OrdersRestControllerTest {
                 .andExpect(MockMvcResultMatchers.status().is(HttpStatus.INTERNAL_SERVER_ERROR.value()));
     }
 
+    @Test
+    public void shouldSendHttpOkResponseWhenOrderUpdated() throws Exception {
+        when(mockOrderService.addOrder(any(Order.class)))
+                .thenReturn(0);
+
+
+        this.mockMvc
+                .perform(MockMvcRequestBuilders
+                        .put("/rest/orders/add")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(new ObjectMapper().writeValueAsString(new Order("ABC", "AWS"))))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(MockMvcResultMatchers.status().is(200));
+    }
+
+    @Test
+    public void shouldSendHttpServerErrorResponseWhenPersistenceLayerFailsToUpdateOrder() throws Exception {
+        when(mockOrderService.addOrder(any(Order.class)))
+                .thenReturn(2);
+
+        this.mockMvc
+                .perform(MockMvcRequestBuilders
+                        .put("/rest/orders/add")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(new ObjectMapper().writeValueAsString(new Order("ABC", "AWS"))))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(MockMvcResultMatchers.status().is(HttpStatus.INTERNAL_SERVER_ERROR.value()));
+    }
+
 }
