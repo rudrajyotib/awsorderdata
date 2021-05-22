@@ -11,6 +11,8 @@ public interface PersistenceRepository {
 
     void addOrder(OrderEntity orderEntity);
 
+    void updateOrder(OrderEntity orderEntity);
+
     List<AuditEntity> listAllAuditEvents();
 
     List<AuditEntity> getAuditEntriesByEntity(String entityNumber);

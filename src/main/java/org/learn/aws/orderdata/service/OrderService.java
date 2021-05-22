@@ -8,4 +8,6 @@ public interface OrderService {
 
     int addOrder(Order order);
 
+    int updateOrder(Order order);
+
 }

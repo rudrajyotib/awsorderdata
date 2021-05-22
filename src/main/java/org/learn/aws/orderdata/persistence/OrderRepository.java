@@ -48,4 +48,11 @@ public class OrderRepository implements PersistenceRepository {
         query.setParameter("entityNumber", entityNumber);
         return query.getResultList();
     }
+
+    @Override
+    public void updateOrder(OrderEntity orderEntity) {
+        entityManager.persist(orderEntity);
+        entityManager.persist(new AuditEntity("ORDER",
+                orderEntity.getOrderNumber(), "UPDATE", StringUtils.isEmpty(systemHostName) ? "NOT AVAILABLE" : systemHostName));
+    }
 }

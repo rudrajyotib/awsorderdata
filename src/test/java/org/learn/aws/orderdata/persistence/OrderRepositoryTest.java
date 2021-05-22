@@ -73,6 +73,18 @@ class OrderRepositoryTest {
         assertEquals("CREATE", auditEntity.getEvent());
         assertEquals("host1", auditEntity.getHostName());
         assertNotNull(auditEntity.getCreateDate());
+        transactionTemplate.executeWithoutResult(transactionStatus -> {
+            OrderEntity order1 = orderRepository.findOrderByOrderNumber("A111");
+            order1.setProduct("UpdatedProduct");
+            orderRepository.updateOrder(order1);
+        });
+        OrderEntity updatedOrder = transactionTemplate.execute(transactionStatus -> orderRepository.findOrderByOrderNumber("A111"));
+        assertNotNull(updatedOrder);
+        assertEquals("UpdatedProduct", updatedOrder.getProduct());
+        List<AuditEntity> updatedAuditEvents = transactionTemplate.execute(transactionStatus -> orderRepository.getAuditEntriesByEntity("A111"));
+        assertNotNull(updatedAuditEvents);
+        assertEquals(2, updatedAuditEvents.size());
+
     }
 
     @Test()
