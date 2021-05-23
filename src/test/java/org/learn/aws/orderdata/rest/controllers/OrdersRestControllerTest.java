@@ -95,13 +95,13 @@ class OrdersRestControllerTest {
 
     @Test
     public void shouldSendHttpOkResponseWhenOrderUpdated() throws Exception {
-        when(mockOrderService.addOrder(any(Order.class)))
+        when(mockOrderService.updateOrder(any(Order.class)))
                 .thenReturn(0);
 
 
         this.mockMvc
                 .perform(MockMvcRequestBuilders
-                        .put("/rest/orders/add")
+                        .put("/rest/orders/update")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(new ObjectMapper().writeValueAsString(new Order("ABC", "AWS"))))
                 .andDo(MockMvcResultHandlers.print())
@@ -110,12 +110,12 @@ class OrdersRestControllerTest {
 
     @Test
     public void shouldSendHttpServerErrorResponseWhenPersistenceLayerFailsToUpdateOrder() throws Exception {
-        when(mockOrderService.addOrder(any(Order.class)))
+        when(mockOrderService.updateOrder(any(Order.class)))
                 .thenReturn(2);
 
         this.mockMvc
                 .perform(MockMvcRequestBuilders
-                        .put("/rest/orders/add")
+                        .put("/rest/orders/update")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(new ObjectMapper().writeValueAsString(new Order("ABC", "AWS"))))
                 .andDo(MockMvcResultHandlers.print())

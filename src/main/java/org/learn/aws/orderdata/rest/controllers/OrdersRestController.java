@@ -37,9 +37,9 @@ public class OrdersRestController {
         return new ResponseEntity<>(Integer.toString(result), resultCodeToResponseCodeMapping.get(result));
     }
 
-    @PutMapping("/orders/add")
+    @PutMapping("/orders/update")
     public ResponseEntity<String> updateOrder(@RequestBody Order order) {
-        int result = orderService.addOrder(order);
+        int result = orderService.updateOrder(order);
         return new ResponseEntity<>(Integer.toString(result), resultCodeToResponseCodeMapping.get(result));
     }
 

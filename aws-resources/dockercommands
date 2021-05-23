@@ -1,0 +1,10 @@
+docker run -e DB_USER=YOUR_DB_USER -e DB_PASS=YOUR_DB_PASS -e DB_HOST=YOUR_DB_HOST -e DB_PORT=YOUR_DB_PORT -eDB_NAME=YOUR_DB_NAME -e HOSTNAME=dockerContainer -p 5001:5001 order-data-aws:v1
+
+ docker tag order-data-aws:v1 rbiswas01/order-data-aws:v1
+
+docker push rbiswas01/order-data-aws:v1
+
+docker build -f Dockerfile -t order-data-aws:v1 .
+
+ docker login
+
