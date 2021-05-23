@@ -43,10 +43,6 @@ public class AuditEntity {
         this.hostName = hostName;
     }
 
-    public String getId() {
-        return id;
-    }
-
     public String getEntityType() {
         return entityType;
     }

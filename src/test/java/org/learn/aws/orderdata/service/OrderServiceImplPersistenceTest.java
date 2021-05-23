@@ -8,6 +8,7 @@ import org.mockito.ArgumentCaptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.support.TransactionTemplate;
@@ -68,6 +69,34 @@ class OrderServiceImplPersistenceTest {
         int result = orderService.addOrder(new Order("AA", "AA"));
 
         assertEquals(0, result);
+    }
+
+    @Test
+    public void shouldHandleDiExceptionInAddOrder() {
+        doThrow(new DataIntegrityViolationException("mock Exception")).when(persistenceRepository).addOrder(argThat(orderEntity -> {
+            assertNotNull(orderEntity);
+            assertEquals("AA", orderEntity.getOrderNumber());
+            assertEquals("AA", orderEntity.getProduct());
+            return true;
+        }));
+
+        int result = orderService.addOrder(new Order("AA", "AA"));
+
+        assertEquals(1, result);
+    }
+
+    @Test
+    public void shouldHandleAnyExceptionInAddOrder() {
+        doThrow(new IllegalStateException("mock Exception")).when(persistenceRepository).addOrder(argThat(orderEntity -> {
+            assertNotNull(orderEntity);
+            assertEquals("AA", orderEntity.getOrderNumber());
+            assertEquals("AA", orderEntity.getProduct());
+            return true;
+        }));
+
+        int result = orderService.addOrder(new Order("AA", "AA"));
+
+        assertEquals(2, result);
     }
 
     @SuppressWarnings("unchecked")
