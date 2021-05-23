@@ -22,4 +22,4 @@ jobs:
         java-version: '11'
         distribution: 'adopt'
     - name: Build with Maven
-      run: mvn -DAWS_DEFAULT_REGION=${{secrets.AWS_REGION}} -Daws.secretKey=${{secrets.AWS_ACCESS_PASS}} -Daws.accessKeyId=${{secrets.AWS_ACCESS_KEY}} deploy -f pom.xml
+      run: mvn clean test package -f pom.xml
