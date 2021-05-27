@@ -51,7 +51,6 @@ public class OrderServiceImpl implements OrderService {
             });
             return 0;
         } catch (Exception exception) {
-            exception.printStackTrace();
             return 2;
         }
     }
